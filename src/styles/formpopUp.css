@@ -1,0 +1,110 @@
+.form-popup {
+    display: none;
+    position: fixed;
+    top: auto;
+    bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 9;
+}
+
+.form-container {
+    max-width: 350px;
+    padding: 20px;
+    background: #2f2841;
+    border-radius: 20px;
+    box-shadow: 0px 10px 40px black;
+}
+
+.musculo-select {
+    background: #514869;
+    color: #f0ffffde;
+    border: none;
+    border-radius: 8px;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 12pt;
+    width: 100%;
+}
+
+.form-container>label {
+    color: #f0ffffde;
+    font-size: 14pt;
+    margin-bottom: 50px;
+}
+
+.form-container>h1 {
+    color: #00ff88;
+    letter-spacing: 2px;
+    font-weight: 800;
+    margin-top: 5px;
+}
+
+.form-container input[type=text],
+.form-container input[type=number] {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    background: #514869;
+    color: #f0ffffde;
+    font-size: 12pt;
+    box-shadow: 0px 10px 40px #00000056;
+    outline: none;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+.form-container input[type=text]::placeholder,
+.form-container input[type=number]::placeholder {
+    color: #f0ffffde;
+    font-size: 13pt;
+}
+
+.btn {
+    width: 40%;
+    border: none;
+    margin: 15px;
+    border-radius: 8px;
+    padding: 10px 0px;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: #2b134b;
+    background: #00ff88;
+    box-shadow: 0px 10px 40px -12px #00ff806c;
+    outline: none;
+    cursor: pointer;
+    font-size: 10pt;
+}
+
+.btn:hover {
+    background-color: #00ff806c;
+    transition: 0.2s;
+}
+
+@media only screen and (min-device-width: 601px) and (max-device-width: 900px) {
+    .form-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .form-container {
+        width: 100vw;
+    }
+
+}
+
+@media only screen and (max-width: 600px) {
+    .form-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .form-container {
+        width: 100vw;
+    }
+}

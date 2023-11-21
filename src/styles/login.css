@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Bebas Neue', 'sans-serif';
+}
+
+body * {
+    box-sizing: border-box;
+}
+
+.main_login {
+    width: 100vw;
+    height: 100vh;
+    background: #201b2c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login {
+    width: 90vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.formLogin>h1 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 3vw;
+    color: #77ffc0;
+    text-align: center;
+}
+
+.card_login {
+    width: 30vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 30px 35px;
+    background: #2f2841;
+    border-radius: 20px;
+    box-shadow: 0px 10px 40px #00000056;
+}
+
+.card_login>h1 {
+    font-size: 30pt;
+    color: #00ff88;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: 3px;
+}
+
+.textfield {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 10px 0px;
+}
+
+.textfield>input {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    background: #514869;
+    color: #f0ffffde;
+    font-size: 12pt;
+    box-shadow: 0px 10px 40px #00000056;
+    outline: none;
+    box-sizing: border-box;
+    margin-bottom: -10px;
+}
+
+.textfield>label {
+    font-size: 16pt;
+    color: #f0ffffde;
+    margin-bottom: 10px;
+}
+
+.textfield>input::placeholder {
+    color: #f0ffffde;
+    font-size: 13pt;
+}
+
+.card_login a {
+    font-size: 13pt;
+    color: #f0ffffde;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
+.btn_login {
+    width: 80%;
+    border: none;
+    margin: 25px;
+    border-radius: 8px;
+    padding: 16px 0px;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: #2b134b;
+    background: #00ff88;
+    box-shadow: 0px 10px 40px -12px #00ff806c;
+    outline: none;
+    cursor: pointer;
+    font-size: 12pt;
+    margin-top: 27px;
+}
+
+.btn_login:hover {
+    background-color: #00ff806c;
+    transition: 0.2s;
+}
+
+@media only screen and (min-device-width: 601px) and (max-device-width: 900px) {
+    .card_login {
+        width: 100%
+    }
+
+}
+
+@media only screen and (max-width: 600px) {
+    .main_login {
+        flex-direction: column;
+    }
+
+    .login {
+        width: 100%;
+        height: auto;
+    }
+
+    .formLogin>h1 {
+        font-size: 10vw;
+    }
+
+    .card_login {
+        width: 100%;
+        padding: 30px 25px;
+    }
+}

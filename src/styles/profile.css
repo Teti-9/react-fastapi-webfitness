@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+body {
+    margin: 0;
+    background: #201b2c;
+    font-family: 'Bebas Neue', 'sans-serif';
+}
+
+body * {
+    box-sizing: border-box;
+}
+
+.content {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.card {
+    background: #2f2841;
+    border-radius: 20px;
+    box-shadow: 0px 10px 40px black;
+    width: 500px;
+}
+
+.mediaCard {
+    background: url('https://img.freepik.com/fotos-premium/gym-girl-adventures-treinamento-em-estilo-anime-em-arte-digital-japonesa-kawaii_950157-1755.jpg?w=2000') center/cover;
+    width: 100%;
+    height: 250px;
+}
+
+.title {
+    color: #00ff88;
+    font-weight: 800;
+    font-size: 24pt;
+    letter-spacing: 2px;
+}
+
+.secondText {
+    color: #f0ffffde;
+    font-size: 13pt;
+}
+
+.bottomText {
+    color: #f0ffffde;
+    font-size: 13pt;
+}
+
+.topCard {
+    padding: 20px;
+    padding-top: 0px;
+}
+
+.bottomCard {
+    padding: 20px;
+}
+
+.actions {
+    border: none;
+    font-weight: 600;
+    background: none;
+    outline: none;
+    cursor: pointer;
+    color: #00ff88;
+}
+
+.actionsD {
+    border: none;
+    font-weight: 600;
+    background: none;
+    margin-left: 115px;
+    outline: none;
+    cursor: pointer;
+    color: #00ff88;
+}
+
+@media only screen and (min-device-width: 601px) and (max-device-width: 900px) {
+    .card {
+        width: 60vw;
+        margin-right: 15px;
+        margin-left: 5px;
+    }
+
+}
+
+@media only screen and (max-width: 600px) {
+    .content {
+        display: inline-block;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card {
+        width: 100vw;
+    }
+}

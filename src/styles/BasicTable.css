@@ -1,0 +1,78 @@
+.table-container>h1 {
+    font-size: 3vw;
+    color: #00ff88;
+    margin-bottom: -5px;
+}
+
+.table {
+    position: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    background: #201b2c;
+    box-shadow: 0px 10px 40px #00000056;
+    color: white;
+}
+
+table,
+th,
+td {
+    border-radius: 8px;
+    border: 1px solid black;
+    line-height: 30px;
+    box-shadow: 0px 10px 40px #00000056;
+    font-size: 22px;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: left;
+    line-height: 30px;
+    background: #29213a;
+}
+
+table thead {
+    color: #00ff88;
+}
+
+.btn-utils>button {
+    margin-top: 10px;
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
+    color: #00ff88;
+}
+
+.att-table {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
+    color: #00ff88;
+}
+
+@media only screen and (min-device-width: 601px) and (max-device-width: 900px) {
+    .table-container>h1 {
+        font-size: 5vw;
+    }
+
+}
+
+@media only screen and (max-width: 600px) {
+    .table-container>h1 {
+        font-size: 10vw;
+    }
+
+    table,
+    th,
+    td {
+        line-height: 20px;
+        font-size: 20px;
+    }
+
+}

@@ -1,0 +1,13 @@
+auto_mix_prep
+fastapi
+SQLAlchemy
+psycopg2-binary
+passlib
+bcrypt
+pydantic
+pydantic[email]
+python-dotenv
+python_jose
+sendgrid
+starlette
+uvicorn
