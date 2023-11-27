@@ -33,12 +33,12 @@ def receber_usuario_logado(token: token_dependency, db: db_dependency):
 
 user_dependency = Annotated[dict, Depends(receber_usuario_logado)]
 
-def enviar_codigo_verificacao(email: str, verification_code: str):
+def enviar_codigo_verificacao(email: str, verification_code: str, tipo: str):
     message = Mail(
         from_email='exercicios.teti@gmail.com',
         to_emails=email,
         subject='Exercícios - Código',
-        html_content=f'Seu código de verificacão é: <strong>{verification_code}</strong>')
+        html_content=f'Seu código de {tipo} é: <strong>{verification_code}</strong>')
     
     try:
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))

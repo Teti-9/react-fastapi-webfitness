@@ -7,6 +7,8 @@ import handlePut from './handleEdit'
 import BasicTable from './BasicTable'
 import axios from 'axios'
 import { DateTime } from 'luxon'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import '../styles/profile.css'
 import '../styles/formpopUp.css'
@@ -14,8 +16,11 @@ import '../styles/formpopUp.css'
 function ProfileCards() {
 
     const config = {
-        headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     };
+
+    localStorage.removeItem('urlcontrol')
+    localStorage.removeItem('urlcontrolnewpass')
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
@@ -51,7 +56,10 @@ function ProfileCards() {
             setLoading(false);
         } catch (error) {
             setLoading(false);
-            console.error('Erro ao visualizar perfil:', error.message);
+            if (error.message === 'Request failed with status code 401') {
+                localStorage.removeItem('token')
+                toast("Sessão expirada, realize login novamente!")
+            }
         }
     }
 

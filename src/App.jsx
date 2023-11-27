@@ -6,10 +6,12 @@ import MainLogin from './components/login'
 import MainRegistro from './components/registro'
 import MainVerificacao from './components/verificacao'
 import ProfileCards from './components/profile'
+import MainRecoverPass from './components/recuperar_senha';
+import MainNewPass from './components/nova_senha';
 
 function App() {
 
-  const isAuthenticated = !!sessionStorage.getItem('token');
+  const isAuthenticated = !!localStorage.getItem('token');
 
   const PrivateRoutePerfil = ({ children }) => {
     return isAuthenticated ? children : <Navigate to="/login" />;
@@ -23,6 +25,8 @@ function App() {
         <Route path="/login" element={<MainLogin />} />
         <Route path="/registro" element={<MainRegistro />} />
         <Route path="/verificacao" element={<MainVerificacao />} />
+        <Route path="/recuperar" element={<MainRecoverPass />} />
+        <Route path="/novasenha" element={<MainNewPass />} />
         <Route
           path="/perfil"
           element={

@@ -10,6 +10,15 @@ function MainRegistro() {
         document.title = 'Register Page';
     }, []);
 
+    const userisLogged = () => {
+        const user = !!localStorage.getItem('token');
+        if (user && user === true) {
+            return (window.location.href = '/perfil')
+        }
+    };
+
+    userisLogged()
+
     const [loading, setLoading] = useState(false);
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
@@ -23,6 +32,7 @@ function MainRegistro() {
             setLoading(false);
             toast.dismiss();
             alert('Conta criada com sucesso!')
+            localStorage.setItem('urlcontrol', true)
             window.location.href = '/verificacao';
         } catch (error) {
             setLoading(false);
@@ -43,14 +53,18 @@ function MainRegistro() {
         signUp({ nome, email, senha })
     }
 
-    const userisLogged = () => {
-        const user = !!sessionStorage.getItem('token');
-        if (user && user === true) {
-            return (window.location.href = '/perfil')
-        }
-    };
+    function togglePass() {
+        let password = document.getElementById("password");
+        let eyeicon = document.getElementById("eyeicon");
 
-    userisLogged()
+        if (password.type == "password") {
+            password.type = "text";
+            eyeicon.src = 'src\\components\\eye-open.png';
+        } else {
+            password.type = "password";
+            eyeicon.src = 'src\\components\\eye-close.png';
+        }
+    }
 
     return (
         <div className="main_registro">
@@ -58,6 +72,7 @@ function MainRegistro() {
                 <form onSubmit={handleRegister} className="formRegistro">
                     <div className="card_registro">
                         <h1>Registro</h1>
+                        <img src="src\components\eye-close.png" id='eyeicon' onClick={togglePass} />
                         <div className="textfield">
                             <label htmlFor="name">Nome</label>
                             <input type="text" name="name" placeholder="Digite seu nome de usuário" value={nome} onChange={(e) => setNome(e.target.value)} required />
@@ -68,7 +83,7 @@ function MainRegistro() {
                         </div>
                         <div className="textfield">
                             <label htmlFor="password">Senha</label>
-                            <input type="password" name="password" placeholder="Digite sua senha" value={senha} onChange={(e) => setSenha(e.target.value)} required />
+                            <input id='password' type="password" name="password" placeholder="Digite sua senha" value={senha} onChange={(e) => setSenha(e.target.value)} required />
                         </div>
                         <button type="submit" className="btn_registro" disabled={loading}>{loading ? <>Criando...</> : <>Criar</>}</button>
                         <a href="/login">Já possui uma conta?</a>

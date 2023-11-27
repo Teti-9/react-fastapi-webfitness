@@ -22,7 +22,7 @@ function MainLogin() {
             const response = await axios.post('http://localhost:8000/login', { email, senha });
             const { token_de_acesso } = response.data;
             setLoading(false);
-            sessionStorage.setItem('token', token_de_acesso);
+            localStorage.setItem('token', token_de_acesso);
             toast.dismiss();
             alert('Bem vindo!')
             window.location.href = '/perfil';
@@ -43,13 +43,26 @@ function MainLogin() {
     }
 
     const userisLogged = () => {
-        const user = !!sessionStorage.getItem('token');
+        const user = !!localStorage.getItem('token');
         if (user && user === true) {
             return (window.location.href = '/perfil')
         }
     };
 
     userisLogged()
+
+    function togglePass() {
+        let password = document.getElementById("password");
+        let eyeicon = document.getElementById("eyeicon");
+
+        if (password.type == "password") {
+            password.type = "text";
+            eyeicon.src = 'src\\components\\eye-open.png';
+        } else {
+            password.type = "password";
+            eyeicon.src = 'src\\components\\eye-close.png';
+        }
+    }
 
     return (
         <div className="main_login">
@@ -59,16 +72,17 @@ function MainLogin() {
                         • Controle seu progresso ✔</h1>
                     <div className="card_login">
                         <h1>LOGIN</h1>
+                        <img src="src\components\eye-close.png" id='eyeicon' onClick={togglePass} />
                         <div className="textfield">
                             <label htmlFor="email">Email</label>
                             <input type="email" name="email" placeholder='Digite seu email' value={email} onChange={(e) => setEmail(e.target.value)} required />
                         </div>
                         <div className="textfield">
                             <label htmlFor="password">Senha</label>
-                            <input type="password" name="password" placeholder='Digite sua senha' value={senha} onChange={(e) => setSenha(e.target.value)} required />
+                            <input id='password' type="password" name="password" placeholder='Digite sua senha' value={senha} onChange={(e) => setSenha(e.target.value)} required />
                         </div>
                         <button type='submit' className='btn_login' id='btn_login' disabled={loading}>{loading ? <>Logando...</> : <>Login</>}</button>
-                        <a href='#'>Não consegue fazer login?</a>
+                        <a href='/recuperar'>Não consegue fazer login?</a>
                         <a href='/registro'>Criar Conta</a>
                     </div>
                 </form>

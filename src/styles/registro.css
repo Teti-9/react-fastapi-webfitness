@@ -109,6 +109,11 @@ body * {
     transition: 0.2s;
 }
 
+.card_registro img {
+    width: 35px;
+    cursor: pointer;
+}
+
 @media only screen and (min-device-width: 601px) and (max-device-width: 900px) {
     .card_registro {
         width: 100%

@@ -21,22 +21,29 @@ class RepositorioUsuario:
 
         return usuario_banco_de_dados
     
-    def procurar_email(self, email):
+    def mudar_senha(self, email: str, senha: str):
+        acao_mudar_senha = update(models.Usuario).where(models.Usuario.email == email).values(
+                                    senha = senha)
+
+        self.session.execute(acao_mudar_senha)
+        self.session.commit()
+    
+    def procurar_email(self, email: str):
         acao_procurar_email = select(models.Usuario).where(models.Usuario.email == email)
         return self.session.execute(acao_procurar_email).scalars().first()
     
-    def procurar_codigo(self, codigo):
+    def procurar_codigo(self, codigo: str):
         acao_procurar_codigo = select(models.Usuario).where(models.Usuario.codigo == codigo)
         return self.session.execute(acao_procurar_codigo).scalars().first()
 
-    def validar_codigo(self, codigo):
+    def validar_codigo(self, codigo: str):
         acao_verificar_usuario = update(models.Usuario).where(models.Usuario.codigo == codigo).values(
                                             verificado = True)
 
         self.session.execute(acao_verificar_usuario)
         self.session.commit()
 
-    def usuario_ja_verificado(self, codigo, isornot):
+    def usuario_ja_verificado(self, codigo: str, isornot: bool):
         acao_usuario_ja_verificado = select(models.Usuario).where(
         and_(models.Usuario.codigo == codigo, models.Usuario.verificado == isornot))
         return self.session.execute(acao_usuario_ja_verificado).scalars().first()

@@ -10,6 +10,15 @@ function MainVerificacao() {
         document.title = 'Verification Page';
     }, []);
 
+    const urlcontrol = async () => {
+        const redirectvalido = !!localStorage.getItem('urlcontrol')
+        if (redirectvalido === false) {
+            return (window.location.href = '/login')
+        }
+    }
+
+    urlcontrol()
+
     const [loading, setLoading] = useState(false);
     const [codigo, setCodigo] = useState('');
 
@@ -21,6 +30,7 @@ function MainVerificacao() {
             setLoading(false);
             toast.dismiss();
             alert('Conta verificada com sucesso!')
+            localStorage.removeItem('urlcontrol')
             window.location.href = '/login';
         } catch (error) {
             setLoading(false);
@@ -37,15 +47,6 @@ function MainVerificacao() {
         e.preventDefault();
         handleVerificar({ codigo })
     }
-
-    const userisLogged = () => {
-        const user = !!sessionStorage.getItem('token');
-        if (user && user === true) {
-            return (window.location.href = '/perfil')
-        }
-    };
-
-    userisLogged()
 
     return (
         <div className="main_verificacao">

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, status, HTTPException, Header
 from src.infra.sqlalchemy.config.database import db_dependency
 from src.routers.auth_utils import user_dependency, enviar_codigo_verificacao
 from src.schemas.schemas import Usuario, LoginData, LoginSucesso
@@ -6,6 +6,7 @@ from src.infra.sqlalchemy.repositorios.repositorio_usuario import RepositorioUsu
 from src.infra.sqlalchemy.repositorios.repositorio_exercicio import RepositorioExercicio
 from src.infra.providers import provedor_hash, provedor_token
 from src.infra.providers.provedor_verificacao import gerar_codigo_verificacao
+from jose import JWTError
 
 router = APIRouter()
 
@@ -19,7 +20,7 @@ def signup(usuario: Usuario, db: db_dependency):
     usuario.codigo = gerar_codigo_verificacao()
     usuario.senha = provedor_hash.gerar_hash(usuario.senha)
     usuario.email = usuario.email.lower()
-    enviar_codigo_verificacao(usuario.email, usuario.codigo)
+    enviar_codigo_verificacao(usuario.email, usuario.codigo, 'verificação')
 
     usuario_criado = RepositorioUsuario(db).criar(usuario)
     return usuario_criado
@@ -39,6 +40,39 @@ def verificacao(codigo: str, db: db_dependency):
 
     usuario_verificado = RepositorioUsuario(db).validar_codigo(codigo)
     return usuario_verificado
+
+@router.post('/recuperar/{email}')
+def recuperar(email: str, db: db_dependency):
+    usuario_ja_existe = RepositorioUsuario(db).procurar_email(email)
+    codigo = gerar_codigo_verificacao()
+
+    if not usuario_ja_existe:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Email não existe!')
+    
+    global recuperar_email
+    recuperar_email = email
+
+    token = provedor_token.criar_token_de_acesso({'sub': codigo})
+    enviar_codigo_verificacao(email, token, 'recuperação de senha')
+
+@router.post('/recuperarconfirm/{codigo}')
+def codigorecuperar(codigo: str):
+    try:
+        recuperar_valido = provedor_token.verificar_token_de_acesso(codigo)
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Token expirado!')
+    return recuperar_valido
+
+@router.post('/novasenha/{senha}')
+def novasenha(senha: str, db: db_dependency):
+    global recuperar_email
+    senha = provedor_hash.gerar_hash(senha)
+
+    RepositorioUsuario(db).mudar_senha(recuperar_email, senha)
+
+    recuperar_email = ''
+    
+    return 'Senha atualizada.'
 
 @router.post('/login', response_model=LoginSucesso)
 def login(login_data: LoginData, db: db_dependency):
