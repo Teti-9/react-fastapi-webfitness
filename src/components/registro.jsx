@@ -41,8 +41,10 @@ function MainRegistro() {
                 toast("Email já cadastrado!");
             else if (error.message === 'Request failed with status code 408')
                 toast("Timeout, pode ter ocorrido um erro com o servidor.");
-            else if (error.message === 'Request failed with status code 422')
-                toast("Digite um email válido!");
+            else if (error.message === 'Request failed with status code 422') {
+                toast("Dois erros ocorreram, considere um dos dois:");
+                toast("(Digite um email válido) (A senha deve conter no mínimo 5 e no máximo 14 caracteres)")
+            }
             else if (error.message === 'Request failed with status code 500')
                 toast("Timeout, pode ter ocorrido um erro com o servidor.");
         }

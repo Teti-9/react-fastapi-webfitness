@@ -70,9 +70,12 @@ def novasenha(usuario: NovaSenha, db: db_dependency):
     global recuperar_email
     usuario.senha = provedor_hash.gerar_hash(usuario.senha)
 
+    if recuperar_email is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Este token já foi consumido (senha alterada)!')
+
     RepositorioUsuario(db).mudar_senha(usuario, recuperar_email)
 
-    recuperar_email = ''
+    recuperar_email = None
     
     return 'Senha atualizada.'
 

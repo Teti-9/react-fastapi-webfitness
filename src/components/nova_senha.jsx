@@ -34,9 +34,10 @@ function MainNewPass() {
         } catch (error) {
             setLoading(false);
             toast.dismiss();
-            if (error.message === 'Request failed with status code 422') {
-                toast("A senha deve conter entre 5 e 14 caracteres")
-            }
+            if (error.message === 'Request failed with status code 422')
+                toast("A senha deve conter no mínimo 5 e no máximo 14 caracteres.")
+            else if (error.message === 'Request failed with status code 401')
+                toast("Este token já foi consumido (senha alterada)!")
         }
     }
 
