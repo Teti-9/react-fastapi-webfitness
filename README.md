@@ -18,6 +18,8 @@ Exemplo: https://exercicios-teti.vercel.app
 * O projeto é feito usando uma database local MySQL porém no deploy (Vercel) do exemplo acima, o projeto utiliza de uma database PostgreSQL.
 
 ## Atualizações
+* 28 de Novembro
+  - Adicionado mínimo e máximo de caracteres para senha.
 * 26 de Novembro
   - Criado rotas para recuperação de senha.
 * 25 de Novembro
