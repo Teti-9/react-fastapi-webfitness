@@ -19,13 +19,13 @@ function MainNewPass() {
     urlcontrol()
 
     const [loading, setLoading] = useState(false);
-    const [newPass, setNewPass] = useState('');
+    const [senha, setSenha] = useState('');
 
-    const handleMudarSenha = async ({ newPass }) => {
+    const handleMudarSenha = async ({ senha }) => {
         try {
             setLoading(true);
             toast("Alterando senha, aguarde...");
-            await axios.post(`http://localhost:8000/novasenha/${newPass}`, { newPass });
+            await axios.post(`http://localhost:8000/novasenha`, { senha });
             setLoading(false);
             toast.dismiss();
             alert('Senha alterada com sucesso!')
@@ -34,13 +34,15 @@ function MainNewPass() {
         } catch (error) {
             setLoading(false);
             toast.dismiss();
-            toast('Ocorreu um erro, tente novamente!')
+            if (error.message === 'Request failed with status code 422') {
+                toast("A senha deve conter entre 5 e 14 caracteres")
+            }
         }
     }
 
     const handleNewPass = async (e) => {
         e.preventDefault();
-        handleMudarSenha({ newPass })
+        handleMudarSenha({ senha })
     }
 
     function togglePass() {
@@ -65,7 +67,7 @@ function MainNewPass() {
                         <img src="src\components\eye-close.png" id='eyeicon' onClick={togglePass} />
                         <div className="textfield">
                             <label htmlFor="usuario">Digite sua nova senha</label>
-                            <input id='password' type="password" name="password1" placeholder="Digite sua nova senha" value={newPass} onChange={(e) => setNewPass(e.target.value)} required />
+                            <input id='password' type="password" name="password1" placeholder="Digite sua nova senha" value={senha} onChange={(e) => setSenha(e.target.value)} required />
                         </div>
                         <button type="submit" className="btn_confirmar" disabled={loading}>{loading ? <>Confirmando...</> : <>Confirmar</>}</button>
                         <a href='/login' >Voltar para página de Login</a>

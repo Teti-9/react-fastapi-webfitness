@@ -1,7 +1,7 @@
-from fastapi import APIRouter, status, HTTPException, Header
+from fastapi import APIRouter, status, HTTPException
 from src.infra.sqlalchemy.config.database import db_dependency
 from src.routers.auth_utils import user_dependency, enviar_codigo_verificacao
-from src.schemas.schemas import Usuario, LoginData, LoginSucesso
+from src.schemas.schemas import Usuario, LoginData, LoginSucesso, NovaSenha
 from src.infra.sqlalchemy.repositorios.repositorio_usuario import RepositorioUsuario
 from src.infra.sqlalchemy.repositorios.repositorio_exercicio import RepositorioExercicio
 from src.infra.providers import provedor_hash, provedor_token
@@ -20,9 +20,10 @@ def signup(usuario: Usuario, db: db_dependency):
     usuario.codigo = gerar_codigo_verificacao()
     usuario.senha = provedor_hash.gerar_hash(usuario.senha)
     usuario.email = usuario.email.lower()
-    enviar_codigo_verificacao(usuario.email, usuario.codigo, 'verificação')
+    # enviar_codigo_verificacao(usuario.email, usuario.codigo, 'verificação')
 
     usuario_criado = RepositorioUsuario(db).criar(usuario)
+
     return usuario_criado
 
 @router.post('/verificacao/{codigo}')
@@ -53,7 +54,8 @@ def recuperar(email: str, db: db_dependency):
     recuperar_email = email
 
     token = provedor_token.criar_token_de_acesso({'sub': codigo})
-    enviar_codigo_verificacao(email, token, 'recuperação de senha')
+    print(token)
+    # enviar_codigo_verificacao(email, token, 'recuperação de senha')
 
 @router.post('/recuperarconfirm/{codigo}')
 def codigorecuperar(codigo: str):
@@ -63,18 +65,18 @@ def codigorecuperar(codigo: str):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Token expirado!')
     return recuperar_valido
 
-@router.post('/novasenha/{senha}')
-def novasenha(senha: str, db: db_dependency):
+@router.post('/novasenha')
+def novasenha(usuario: NovaSenha, db: db_dependency):
     global recuperar_email
-    senha = provedor_hash.gerar_hash(senha)
+    usuario.senha = provedor_hash.gerar_hash(usuario.senha)
 
-    RepositorioUsuario(db).mudar_senha(recuperar_email, senha)
+    RepositorioUsuario(db).mudar_senha(usuario, recuperar_email)
 
     recuperar_email = ''
     
     return 'Senha atualizada.'
 
-@router.post('/login', response_model=LoginSucesso)
+@router.post('/login')
 def login(login_data: LoginData, db: db_dependency):
     email = login_data.email.lower()
     senha = login_data.senha

@@ -9,7 +9,7 @@ class RepositorioUsuario:
         self.session = session
 
     def criar(self, usuario: schemas.Usuario):
-        usuario_banco_de_dados = models.Usuario(nome = usuario.nome,
+        usuario_banco_de_dados = models.Usuario(nome = usuario.nome.title(),
                                                 senha = usuario.senha,
                                                 email = usuario.email,
                                                 codigo = usuario.codigo,
@@ -21,9 +21,9 @@ class RepositorioUsuario:
 
         return usuario_banco_de_dados
     
-    def mudar_senha(self, email: str, senha: str):
+    def mudar_senha(self, usuario: schemas.NovaSenha, email: str):
         acao_mudar_senha = update(models.Usuario).where(models.Usuario.email == email).values(
-                                    senha = senha)
+                                    senha = usuario.senha)
 
         self.session.execute(acao_mudar_senha)
         self.session.commit()

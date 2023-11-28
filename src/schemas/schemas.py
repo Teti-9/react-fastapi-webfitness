@@ -1,4 +1,4 @@
-from pydantic import ConfigDict, BaseModel, EmailStr
+from pydantic import ConfigDict, BaseModel, EmailStr, Field
 from typing import Optional, List
 import datetime
 
@@ -16,12 +16,16 @@ class Exercicio(BaseModel):
 class Usuario(BaseModel):
     id: Optional[int] = None
     nome: str
-    senha: str
+    senha: str = Field(min_length=5, max_length=14)
     email: EmailStr
     codigo: Optional[str] = None
     verificado: Optional[bool] = None
     exercicios: List[Exercicio] = []
 
+    model_config = ConfigDict(from_attributes=True)
+
+class NovaSenha(BaseModel):
+    senha: str = Field(min_length=5, max_length=14)
     model_config = ConfigDict(from_attributes=True)
 
 class LoginData(BaseModel):
