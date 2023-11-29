@@ -10,6 +10,9 @@ from jose import JWTError
 
 router = APIRouter()
 
+global codigos_invalidos
+codigos_invalidos = []
+
 @router.post('/signup', status_code=status.HTTP_201_CREATED)
 def signup(usuario: Usuario, db: db_dependency):
     usuario_ja_existe = RepositorioUsuario(db).procurar_email(usuario.email)
@@ -44,38 +47,40 @@ def verificacao(codigo: str, db: db_dependency):
 
 @router.post('/recuperar/{email}')
 def recuperar(email: str, db: db_dependency):
+    global recuperar_email
+
     usuario_ja_existe = RepositorioUsuario(db).procurar_email(email)
     codigo = gerar_codigo_verificacao()
 
     if not usuario_ja_existe:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Email não existe!')
-    
-    global recuperar_email
-    recuperar_email = email
 
     token = provedor_token.criar_token_de_acesso({'sub': codigo})
     print(token)
+
+    recuperar_email = email
+
     # enviar_codigo_verificacao(email, token, 'recuperação de senha')
 
 @router.post('/recuperarconfirm/{codigo}')
 def codigorecuperar(codigo: str):
+
+    if codigo in codigos_invalidos:
+        raise HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail='Esse token já foi consumido!')
+
     try:
         recuperar_valido = provedor_token.verificar_token_de_acesso(codigo)
+        codigos_invalidos.append(codigo)
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Token expirado!')
+
     return recuperar_valido
 
 @router.post('/novasenha')
 def novasenha(usuario: NovaSenha, db: db_dependency):
-    global recuperar_email
     usuario.senha = provedor_hash.gerar_hash(usuario.senha)
 
-    if recuperar_email is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Este token já foi consumido (senha alterada)!')
-
     RepositorioUsuario(db).mudar_senha(usuario, recuperar_email)
-
-    recuperar_email = None
     
     return 'Senha atualizada.'
 

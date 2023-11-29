@@ -36,7 +36,7 @@ function App() {
           }
         />
       </Routes>
-      <ToastContainer theme="dark" />
+      <ToastContainer autoClose={10000} theme="dark" hideProgressBar />
     </BrowserRouter>
   )
 }
