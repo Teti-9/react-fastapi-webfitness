@@ -31,7 +31,7 @@ class RepositorioExercicio:
             and_(models.Exercicio.id == id, models.Exercicio.usuario_id == user_id))
         return self.session.execute(acao_procurar_exercicio).scalars().first()
 
-    def editar(self, id: int, user_id: int, exercicio: schemas.Exercicio):
+    def editar(self, id: int, user_id: int, exercicio: schemas.ExercicioEdit):
         acao_editar_exercicio = update(models.Exercicio).where(
             and_(models.Exercicio.id == id, models.Exercicio.usuario_id == user_id)).values(
                                                     musculo = exercicio.musculo.capitalize(),
@@ -44,6 +44,11 @@ class RepositorioExercicio:
 
         self.session.execute(acao_editar_exercicio)
         self.session.commit()
+
+    def procurar_nome_atual(self, id: int, user_id: int):
+        acao_procurar_exercicio = select(models.Exercicio.nome_exercicio).where(
+            and_(models.Exercicio.id == id, models.Exercicio.usuario_id == user_id))
+        return self.session.execute(acao_procurar_exercicio).scalars().first()
 
     def remover(self, id: int, user_id: int):
         acao_remover_exercicio = delete(models.Exercicio).where(

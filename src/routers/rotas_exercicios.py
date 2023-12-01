@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, HTTPException
 from src.infra.sqlalchemy.config.database import db_dependency
 from src.routers.auth_utils import user_dependency
-from src.schemas.schemas import Exercicio
+from src.schemas.schemas import Exercicio, ExercicioEdit
 from src.infra.sqlalchemy.repositorios.repositorio_exercicio import RepositorioExercicio
 
 router = APIRouter()
@@ -21,7 +21,7 @@ def criar_exercicio(exercicio: Exercicio, usuario: user_dependency, db: db_depen
     return exercicio_criado
 
 @router.put('/exercicios/{id}')
-def editar_exercicio(id: int, exercicio: Exercicio, usuario: user_dependency, db: db_dependency):
+def editar_exercicio(id: int, exercicio: ExercicioEdit, usuario: user_dependency, db: db_dependency):
     exercicio_existe = RepositorioExercicio(db).procurar_exercicio(id, usuario.id)
 
     if not exercicio_existe:
@@ -33,6 +33,9 @@ def editar_exercicio(id: int, exercicio: Exercicio, usuario: user_dependency, db
     
     if exercicio.musculo.capitalize() == 'Braço':
         exercicio.musculo = 'Braco'
+
+    if exercicio.nome_exercicio == None:
+        exercicio.nome_exercicio = RepositorioExercicio(db).procurar_nome_atual(id, usuario.id)
 
     RepositorioExercicio(db).editar(id, usuario.id, exercicio)
     return 'Exercício editado com sucesso!'

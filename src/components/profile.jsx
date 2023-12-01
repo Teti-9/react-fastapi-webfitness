@@ -24,6 +24,7 @@ function ProfileCards() {
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
+    const [dataOptions, setDataOptions] = useState([]);
     const [musculoProfile, setMusculoProfile] = useState('');
     const [exercicioDel, setExercicioDel] = useState(new Int16Array);
     const [exercicioEdit, setExercicioEdit] = useState(new Int16Array);
@@ -38,22 +39,51 @@ function ProfileCards() {
         setMusculoTitle('Músculo não definido.')
     }, []);
 
+    const fetchOptions = async (e) => {
+        e.preventDefault();
+        try {
+            setLoading(true);
+            if (musculo === 'Selecione' || musculo === '') {
+                setLoading(false);
+                toast.dismiss()
+                toast("Selecione um músculo válido!")
+            } else {
+                await axios.get(`http://localhost:8000/me/${musculo}`, config).then((getResponse) => {
+                    setDataOptions(getResponse.data)
+                })
+                setLoading(false);
+            }
+        } catch (error) {
+            setLoading(false);
+            if (error.message === 'Request failed with status code 401') {
+                localStorage.removeItem('token')
+                toast("Sessão expirada, realize login novamente!")
+            }
+        }
+    }
+
     const fetchTableData = async (e) => {
         e.preventDefault();
 
         try {
             setLoading(true);
-            await axios.get(`http://localhost:8000/me/${musculoProfile}`, config).then((getResponse) => {
-                setData(getResponse.data)
+            if (musculoProfile === 'Selecione' || musculoProfile === '') {
+                setLoading(false);
+                toast.dismiss()
+                toast("Selecione um músculo válido!")
+            } else {
+                await axios.get(`http://localhost:8000/me/${musculoProfile}`, config).then((getResponse) => {
+                    setData(getResponse.data)
 
-                if (musculoProfile === 'Braco')
-                    setMusculoTitle('Braço')
-                else if (musculoProfile !== 'Braco')
-                    setMusculoTitle(musculoProfile)
+                    if (musculoProfile === 'Braco')
+                        setMusculoTitle('Braço')
+                    else if (musculoProfile !== 'Braco')
+                        setMusculoTitle(musculoProfile)
 
-                document.getElementById("myFormView").style.display = "none";
-            })
-            setLoading(false);
+                    document.getElementById("myFormView").style.display = "none";
+                })
+                setLoading(false);
+            }
         } catch (error) {
             setLoading(false);
             if (error.message === 'Request failed with status code 401') {
@@ -138,7 +168,12 @@ function ProfileCards() {
 
     const handleEdit = async (e) => {
         e.preventDefault();
-        handlePut({ exercicioEdit, musculo, nome_exercicio, carga, repeticoes })
+
+        if (nome_exercicio === '') {
+            handlePut({ exercicioEdit, musculo, carga, repeticoes })
+        } else {
+            handlePut({ exercicioEdit, musculo, nome_exercicio, carga, repeticoes })
+        }
 
         document.getElementById("myFormEdit").style.display = "none";
         setMusculo('Selecione')
@@ -180,7 +215,7 @@ function ProfileCards() {
             <div className="form-popup" id="myForm">
                 <form onSubmit={handleCriar} className="form-container">
                     <h1>Criar Exercício</h1>
-                    <label htmlFor='musculo'>Músculo<br></br></label>
+                    <label htmlFor='musculo'>Músculo</label>
                     <select className='musculo-select' id='musculo-select-id' value={musculo} onChange={(e) => setMusculo(e.target.value)} required>
                         <option>Selecione</option>
                         <option value="Peito" >Peito</option>
@@ -190,7 +225,7 @@ function ProfileCards() {
                         <option value="Braco">Braço</option>
                         <option value="Abs">Abs</option>
                     </select>
-                    <label htmlFor="exercicio"><br></br>Nome do Exercício</label>
+                    <label htmlFor="exercicio">Nome do Exercício</label>
                     <input type="text" placeholder="Digite o nome do exercício" name="exercicio" value={nome_exercicio} onChange={(e) => setNome_exercicio(e.target.value)} required />
                     <label htmlFor="carga">Carga</label>
                     <input type="number" placeholder="Carga utilizada" name="carga" value={carga} onChange={(e) => setCarga(e.target.value)} required />
@@ -204,7 +239,7 @@ function ProfileCards() {
             <div className="form-popup" id="myFormEdit">
                 <form onSubmit={handleEdit} className="form-container">
                     <h1>Editar Exercício</h1>
-                    <label htmlFor='musculo'>Músculo<br></br></label>
+                    <label htmlFor='musculo'>Músculo</label>
                     <select className='musculo-select' id='musculo-select-id' value={musculo} onChange={(e) => setMusculo(e.target.value)} required>
                         <option>Selecione</option>
                         <option value="Peito" >Peito</option>
@@ -214,10 +249,15 @@ function ProfileCards() {
                         <option value="Braco">Braço</option>
                         <option value="Abs">Abs</option>
                     </select>
-                    <label htmlFor="exercicio"><br></br>ID do Exercício a ser editado</label>
-                    <input type="text" placeholder="Cheque a tabela por ids" name="exercicio" value={exercicioEdit} onChange={(e) => setExercicioEdit(e.target.value)} required />
-                    <label htmlFor="exercicio"><br></br>Nome do Exercício</label>
-                    <input type="text" placeholder="Digite o novo ou mesmo nome" name="exercicio" value={nome_exercicio} onChange={(e) => setNome_exercicio(e.target.value)} required />
+                    <button type="button" className="btn-ops" onClick={fetchOptions} disabled={loading}>{loading ? <>Procurando..</> : <>Lista de exercícios</>}</button>
+                    <select className='musculo-select' id='musculo-select-id' value={exercicioEdit} onChange={(e) => setExercicioEdit(e.target.value)} required>
+                        <option>Selecione um exercício</option>
+                        {
+                            dataOptions.map((opts, i) => <option key={opts.id} value={opts.id} >{opts.nome_exercicio}</option>)
+                        }
+                    </select>
+                    <label htmlFor="exercicio">Nome do Exercício</label>
+                    <input type="text" placeholder="Novo nome ou deixe em branco" name="exercicio" value={nome_exercicio} onChange={(e) => setNome_exercicio(e.target.value)} />
                     <label htmlFor="carga">Carga</label>
                     <input type="number" placeholder="Nova ou mesma carga utilizada" name="carga" value={carga} onChange={(e) => setCarga(e.target.value)} required />
                     <label htmlFor="repeticoes">Repetições</label>
@@ -230,7 +270,7 @@ function ProfileCards() {
             <div className="form-popup" id="myFormDel">
                 <form onSubmit={handleDel} className="form-container">
                     <h1>Deletar Exercício</h1>
-                    <label htmlFor="exercicio"><br></br>ID do Exercício a ser deletado</label>
+                    <label htmlFor="exercicio">ID do Exercício a ser deletado</label>
                     <input type="text" placeholder="Cheque a tabela por ids" name="exercicio" value={exercicioDel} onChange={(e) => setExercicioDel(e.target.value)} required />
                     <button type="submit" className="btn">Deletar</button>
                     <button type="button" className="btn" onClick={closeForm}>Fechar</button>
@@ -240,7 +280,7 @@ function ProfileCards() {
             <div className="form-popup" id="myFormView">
                 <form onSubmit={fetchTableData} className="form-container">
                     <h1>Atualizar tabela</h1>
-                    <label htmlFor='musculo'>Músculo<br></br></label>
+                    <label htmlFor='musculo'>Músculo</label>
                     <select className='musculo-select' id='musculo-select-id' value={musculoProfile} onChange={(e) => setMusculoProfile(e.target.value)} required>
                         <option>Selecione</option>
                         <option value="Peito" >Peito</option>

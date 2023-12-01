@@ -64,13 +64,14 @@ def recuperar(email: str, db: db_dependency):
 
 @router.post('/recuperarconfirm/{codigo}')
 def codigorecuperar(codigo: str):
+    global codigos
+    codigos = codigo
 
     if codigo in codigos_invalidos:
         raise HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED, detail='Esse token já foi consumido!')
 
     try:
         recuperar_valido = provedor_token.verificar_token_de_acesso(codigo)
-        codigos_invalidos.append(codigo)
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Token expirado!')
 
@@ -81,6 +82,7 @@ def novasenha(usuario: NovaSenha, db: db_dependency):
     usuario.senha = provedor_hash.gerar_hash(usuario.senha)
 
     RepositorioUsuario(db).mudar_senha(usuario, recuperar_email)
+    codigos_invalidos.append(codigos)
     
     return 'Senha atualizada.'
 

@@ -13,6 +13,17 @@ class Exercicio(BaseModel):
     
     model_config = ConfigDict(from_attributes=True)
 
+class ExercicioEdit(BaseModel):
+    id: Optional[int] = None
+    musculo: str
+    nome_exercicio: Optional[str] = None
+    carga: int
+    repeticoes: float
+    data: Optional[datetime.datetime] = None
+    usuario_id: Optional[int] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
 class Usuario(BaseModel):
     id: Optional[int] = None
     nome: str

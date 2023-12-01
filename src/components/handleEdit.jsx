@@ -14,8 +14,8 @@ const handlePut = async ({ exercicioEdit, musculo, nome_exercicio, carga, repeti
         toast('Exercício editado com sucesso, atualize a tabela!');
     } catch (error) {
         toast.dismiss();
-        if (error.message === 'Request failed with status code 400')
-            toast('Não existe um exercício com este id!');
+        if (error.message === 'Request failed with status code 405')
+            toast('Prencha o formulário corretamente!');
         else if (error.message === 'Request failed with status code 404')
             toast('Prencha o formulário corretamente!');
         else if (error.message === 'Request failed with status code 401') {
