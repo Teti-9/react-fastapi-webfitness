@@ -185,10 +185,10 @@ function ProfileCards() {
 
     const handleDel = async (e) => {
         e.preventDefault();
+
         handleDelete({ exercicioDel })
 
         document.getElementById("myFormDel").style.display = "none";
-        setExercicioDel(new Int16Array)
     }
 
     return (
@@ -249,7 +249,8 @@ function ProfileCards() {
                         <option value="Braco">Braço</option>
                         <option value="Abs">Abs</option>
                     </select>
-                    <button type="button" className="btn-ops" onClick={fetchOptions} disabled={loading}>{loading ? <>Procurando..</> : <>Lista de exercícios</>}</button>
+                    <button type="button" className="btn-ops" onClick={fetchOptions} disabled={loading}>{loading ? <>Procurando..</> : <>Procurar Exercícios</>}</button>
+                    <label htmlFor='musculo'>Exercício a ser editado:</label>
                     <select className='musculo-select' id='musculo-select-id' value={exercicioEdit} onChange={(e) => setExercicioEdit(e.target.value)} required>
                         <option>Selecione um exercício</option>
                         {
@@ -270,8 +271,24 @@ function ProfileCards() {
             <div className="form-popup" id="myFormDel">
                 <form onSubmit={handleDel} className="form-container">
                     <h1>Deletar Exercício</h1>
-                    <label htmlFor="exercicio">ID do Exercício a ser deletado</label>
-                    <input type="text" placeholder="Cheque a tabela por ids" name="exercicio" value={exercicioDel} onChange={(e) => setExercicioDel(e.target.value)} required />
+                    <label htmlFor='musculo'>Músculo</label>
+                    <select className='musculo-select' id='musculo-select-id' value={musculo} onChange={(e) => setMusculo(e.target.value)} required>
+                        <option>Selecione</option>
+                        <option value="Peito" >Peito</option>
+                        <option value="Costas">Costas</option>
+                        <option value="Perna">Perna</option>
+                        <option value="Ombro">Ombro</option>
+                        <option value="Braco">Braço</option>
+                        <option value="Abs">Abs</option>
+                    </select>
+                    <button type="button" className="btn-ops" onClick={fetchOptions} disabled={loading}>{loading ? <>Procurando..</> : <>Procurar Exercícios</>}</button>
+                    <label htmlFor='musculo'>Exercício a ser deletado:</label>
+                    <select className='musculo-select' id='musculo-select-id' value={exercicioDel} onChange={(e) => setExercicioDel(e.target.value)} required>
+                        <option>Selecione um exercício</option>
+                        {
+                            dataOptions.map((opts, i) => <option key={opts.id} value={opts.id} >{opts.nome_exercicio}</option>)
+                        }
+                    </select>
                     <button type="submit" className="btn">Deletar</button>
                     <button type="button" className="btn" onClick={closeForm}>Fechar</button>
                 </form>

@@ -14,8 +14,8 @@ const handleDelete = async ({ exercicioDel }) => {
         toast('Exercício removido com sucesso, atualize a tabela!');
     } catch (error) {
         toast.dismiss();
-        if (error.message === 'Request failed with status code 400')
-            toast('Não existe um exercício com este id!');
+        if (error.message === 'Request failed with status code 405')
+            toast('Selecione as opções corretamente!');
         else if (error.message === 'Request failed with status code 401') {
             localStorage.removeItem('token')
             toast("Sessão expirada, realize login novamente!")
