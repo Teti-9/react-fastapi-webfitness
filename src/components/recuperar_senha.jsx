@@ -59,6 +59,8 @@ function MainRecoverPass() {
                 toast("Esse token já foi consumido!");
             else if (error.message === 'Request failed with status code 401')
                 toast("Token expirado!");
+            else if (error.message === 'Request failed with status code 404')
+                toast('Preencha o campo código corretamente!');
         }
     }
 
