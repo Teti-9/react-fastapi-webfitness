@@ -45,3 +45,17 @@ def enviar_codigo_verificacao(email: str, verification_code: str, tipo: str):
         sg.send(message)
     except Exception as e:
         print(e)
+
+def individual_serial(dieta) -> dict:
+    return {
+        "id": str(dieta["_id"]),
+        "calorias": dieta['calorias'],
+        "carbs": dieta["carbs"],
+        "protein": dieta["protein"],
+        "fat": dieta["fat"],
+        "data": dieta["data"],
+        "usuario_id": dieta["usuario_id"]
+    }
+
+def list_serial(dieta):
+    return individual_serial(dieta)

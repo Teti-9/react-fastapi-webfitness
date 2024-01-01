@@ -2,6 +2,12 @@ from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Boo
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from src.infra.sqlalchemy.config.database import Base
+from pydantic import ConfigDict, BaseModel, Field
+from typing import Optional
+from datetime import datetime
+
+def datetime_now() -> datetime:
+    return datetime.now()
 
 class Usuario(Base):
     __tablename__ = 'usuario'
@@ -27,3 +33,12 @@ class Exercicio(Base):
     usuario_id = Column(Integer, ForeignKey('usuario.id', name='fake_user'))
     
     usuario = relationship('Usuario', back_populates='exercicios')
+
+class Macros(BaseModel):
+    calorias: Optional[float] = 0
+    carbs: Optional[float] = 0
+    protein: Optional[float] = 0
+    fat: Optional[float] = 0
+    data: datetime = Field(default_factory=datetime_now)
+    usuario_id: Optional[int] = None
+    model_config = ConfigDict(from_attributes=True)
